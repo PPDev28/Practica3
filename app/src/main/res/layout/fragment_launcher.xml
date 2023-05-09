@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0169E0"
+    android:background="@color/project_blue"
     tools:context=".fragments.LauncherFragment">
 
     <com.google.android.material.imageview.ShapeableImageView

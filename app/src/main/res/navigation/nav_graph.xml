@@ -6,7 +6,7 @@
     app:startDestination="@id/launcherFragment">
     <activity
         android:id="@+id/navigationActivity2"
-        android:name="com.example.practica3.NavigationActivity"
+        android:name="com.example.practica3.activities.NavigationActivity"
         android:label="navigation_main"
         tools:layout="@layout/navigation_main" />
     <fragment
@@ -15,7 +15,12 @@
         android:label="fragment_launcher"
         tools:layout="@layout/fragment_launcher">
         <action
-            android:id="@+id/action_launcherFragment_to_navigationActivity2"
-            app:destination="@id/navigationActivity2" />
+            android:id="@+id/action_launcherFragment_to_browsersFragment2"
+            app:destination="@id/browsersFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/browsersFragment"
+        android:name="com.example.practica3.fragments.BrowsersFragment"
+        android:label="fragment_web_browser"
+        tools:layout="@layout/fragment_browser" />
 </navigation>

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Practica3">
         <activity
-            android:name=".NavigationActivity"
+            android:name=".activities.NavigationActivity"
             android:exported="true"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
             <intent-filter>
