@@ -6,7 +6,16 @@ import com.example.practica3.models.WebBrowserBo
 
 class MockProvider {
     companion object{
-        val browserLista = listOf(
+        val browserList = listOf(
+            WebBrowserBo(
+                "Safari",
+                "Apple",
+                2003,
+                R.drawable.logo_alten,
+                "www.alten.es",
+                false,
+                BrowserOSEnum.ChromeOS
+            ),
             WebBrowserBo(
                 "Chrome",
                 "Google",
@@ -14,34 +23,34 @@ class MockProvider {
                 R.drawable.logo_alten,
                 "www.alten.es",
                 true,
-                BrowserOSEnum.UNKNOWN
+                BrowserOSEnum.ChromeOS
             ),
             WebBrowserBo(
                 "Firefox",
-                "Firefox",
-                2010,
+                "Mozilla",
+                2002,
                 R.drawable.logo_alten,
                 "www.alten.es",
                 true,
-                BrowserOSEnum.UNKNOWN
+                BrowserOSEnum.ChromeOS
             ),
             WebBrowserBo(
                 "Edge",
                 "Microsoft",
-                2018,
+                2015,
                 R.drawable.logo_alten,
                 "www.alten.es",
                 true,
-                BrowserOSEnum.UNKNOWN
+                BrowserOSEnum.ChromeOS
             ),
             WebBrowserBo(
-                "Safari",
-                "Apple",
-                2018,
+                "Opera",
+                "Opera",
+                1995,
                 R.drawable.logo_alten,
                 "www.alten.es",
-                false,
-                BrowserOSEnum.UNKNOWN
+                true,
+                BrowserOSEnum.ChromeOS
             )
         )
     }

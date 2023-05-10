@@ -6,4 +6,5 @@
     <string name="ordenar">Ordenar</string>
     <string name="icon_mobile">Icon mobile</string>
     <string name="icon_web">Icon web</string>
+    <string name="error_inflate_list">Error inflando la lista</string>
 </resources>

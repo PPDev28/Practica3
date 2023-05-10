@@ -10,19 +10,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practica3.R
 import com.example.practica3.adapters.BrowserFragmentListAdapter
 import com.example.practica3.databinding.FragmentBrowserBinding
+import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
-import com.example.practica3.providers.MockProvider.Companion.browserLista
+import com.example.practica3.providers.MockProvider.Companion.browserList
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class BrowsersFragment : Fragment(R.layout.fragment_browser) {
 
 
     private val binding by lazy { FragmentBrowserBinding.inflate(layoutInflater) }
+    private val browserAdapter by lazy { BrowserFragmentListAdapter() }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return binding.root
 
@@ -40,10 +40,8 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser) {
 
     private fun setUpAdapter() {
 
-
-        val adapter = BrowserFragmentListAdapter()
-        adapter.submitList(mockBrowser(4))
-        binding.browserFragmentRecyclerView.adapter = adapter
+        browserAdapter.submitList(mockBrowser(5))
+        binding.browserFragmentRecyclerView.adapter = browserAdapter
         binding.browserFragmentRecyclerView.layoutManager = LinearLayoutManager(context)
 
     }
@@ -53,7 +51,7 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser) {
 
         binding.broserFragmentToolbar.setOnMenuItemClickListener { item: MenuItem? ->
             when (item?.itemId) {
-                R.id.action_sorted-> showSortDialog()
+                R.id.action_sorted -> showSortDialog()
                 R.id.action_filter -> showFilterDialog()
             }
             true
@@ -61,31 +59,66 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser) {
     }
 
     private fun showFilterDialog() {
+
+        val opciones = BrowserOSEnum.values().map { it.name }.toTypedArray()
+        val checkedItems = BooleanArray(opciones.size) { false }
+
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Filtrar")
-            .setMessage("Navegadores")
-            .setPositiveButton(android.R.string.ok, null)
+            .setTitle("Selecciona tus opciones")
+            .setMultiChoiceItems(opciones, checkedItems) { dialog, which, isChecked ->
+                // Aquí puedes manejar la lógica de lo que sucede cuando se selecciona o deselecciona una opción
+            }
+            .setPositiveButton("Aceptar") { dialog, which ->
+                // Aquí puedes manejar la lógica de lo que sucede cuando se pulsa el botón Aceptar
+            }
+            .setNegativeButton("Cancelar", null)
             .show()
     }
 
 
     private fun showSortDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Ordenar")
-            .setMessage("Navegadores")
-            .setPositiveButton(android.R.string.ok, null)
-            .show()
+        val radioButtonList = arrayOf("Nombre", "Compañía", "Creación")
+        var selectedRadioButton = 0
+        val builder = context?.let { MaterialAlertDialogBuilder(it) }
+        builder?.setTitle("Ordenar")
+        builder?.setSingleChoiceItems(radioButtonList, selectedRadioButton) { _, which ->
+            selectedRadioButton = which
+        }
+        builder?.setPositiveButton("Aceptar") { _, _ ->
+            when (selectedRadioButton) {
+                0 -> {
+                    browserAdapter.submitList(mockBrowser(5).sortedBy { it.browserName })
+                }
+                1 -> {
+                    browserAdapter.submitList(mockBrowser(5).sortedBy { it.browserCompany })
+                }
+                2 -> {
+                    browserAdapter.submitList(mockBrowser(5).sortedBy { it.browserCreationDate })
+                }
+            }
+        }
+        builder?.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog = builder?.create()
+        dialog?.show()
     }
 
     private fun mockBrowser(number: Int): List<WebBrowserBo> {
 
-        return if (number > browserLista.size) {
-            println("La lista solo tiene ${browserLista.size} personas.")
-            emptyList()
+        return browserList.take(number).sortedBy { it.browserName }
 
-        } else {
-            browserLista.take(number)
-        }
+//        val rootView: View = requireActivity().findViewById(android.R.id.content)
+//            println("La lista solo tiene ${browserList.size} navegadores.")
+//            Snackbar.make(rootView, "Mensaje de ejemplo", Snackbar.LENGTH_SHORT).show()
+
+//        return if (number > browserList.size) {
+//            println("La lista solo tiene ${browserList.size} navegadores.")
+//            Snackbar.make(rootView, "Mensaje de ejemplo", Snackbar.LENGTH_SHORT).show()
+//
+//        } else {
+//            browserList.take(number).sortedBy { it.browserName }
+//        }
 
     }
 }
