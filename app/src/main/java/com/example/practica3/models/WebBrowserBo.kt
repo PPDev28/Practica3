@@ -10,6 +10,4 @@ data class WebBrowserBo(
     val browserWeb: String,
     val browserMobile: Boolean,
     val browserOS: BrowserOSEnum,
-) {
-
-}
+)

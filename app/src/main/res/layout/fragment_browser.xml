@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:background="@color/project_blue"
         app:title="@string/top_toolbar_title"
+        app:menu="@menu/browsers_menu"
         app:titleTextColor="@color/white"
         android:layout_height="wrap_content">
 

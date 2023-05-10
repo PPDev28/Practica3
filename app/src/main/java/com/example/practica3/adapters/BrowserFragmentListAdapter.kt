@@ -2,13 +2,14 @@ package com.example.practica3.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practica3.databinding.FragmentBrowserItemsBinding
 import com.example.practica3.models.WebBrowserBo
 
-class BrowserFragmentListAdapter(browsers: List<WebBrowserBo>) :
+class BrowserFragmentListAdapter :
     ListAdapter<WebBrowserBo, BrowserFragmentListAdapter.WebBrowserViewHolder>(DiffCallback) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<WebBrowserBo>() {
@@ -34,10 +35,13 @@ class BrowserFragmentListAdapter(browsers: List<WebBrowserBo>) :
     class WebBrowserViewHolder(private val binding: FragmentBrowserItemsBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(webBrowserBo: WebBrowserBo) {
+
             binding.browserFragmentLogoImage.setImageResource(webBrowserBo.browserImage)
             binding.browserFragmentTittle.text = webBrowserBo.browserName
             binding.browserFragmentYear.text = webBrowserBo.browserCreationDate.toString()
             binding.browserFragmentCompany.text = webBrowserBo.browserCompany
+            binding.browserFragmentIconMobile.isInvisible = !webBrowserBo.browserMobile
+
 
         }
     }

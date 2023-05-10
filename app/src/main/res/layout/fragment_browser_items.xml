@@ -67,25 +67,28 @@
                 app:layout_constraintStart_toEndOf="@+id/browserFragmentYear"
                 app:layout_constraintTop_toBottomOf="@+id/browserFragmentTittle" />
 
-            <com.google.android.material.imageview.ShapeableImageView
+            <ImageButton
                 android:id="@+id/browserFragmentIconMobile"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/p3_smartphone"
+                android:background="@drawable/p3_smartphone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/icon_mobile" />
 
-            <com.google.android.material.imageview.ShapeableImageView
+            <ImageButton
                 android:id="@+id/browserFragmentIconWeb"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/p3_logo"
+                android:background="@drawable/p3_logo"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/browserFragmentIconMobile" />
+                app:layout_constraintTop_toBottomOf="@+id/browserFragmentIconMobile"
+                android:contentDescription="@string/icon_web" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
