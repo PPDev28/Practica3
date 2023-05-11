@@ -7,10 +7,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practica3.databinding.FragmentBrowserItemsBinding
+import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
+import com.example.practica3.providers.MockProvider
 
-class BrowserFragmentListAdapter :
+class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener) :
     ListAdapter<WebBrowserBo, BrowserFragmentListAdapter.WebBrowserViewHolder>(DiffCallback) {
+
+    interface IOnItemClickListener {
+        fun onIconWebClickItem(position: Int,webBrowserBo: WebBrowserBo)
+    }
 
     companion object DiffCallback : DiffUtil.ItemCallback<WebBrowserBo>() {
         override fun areItemsTheSame(oldItem: WebBrowserBo, newItem: WebBrowserBo): Boolean {
@@ -20,6 +26,7 @@ class BrowserFragmentListAdapter :
         override fun areContentsTheSame(oldItem: WebBrowserBo, newItem: WebBrowserBo): Boolean {
             return oldItem.browserName == newItem.browserName
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WebBrowserViewHolder {
@@ -29,12 +36,12 @@ class BrowserFragmentListAdapter :
     }
 
     override fun onBindViewHolder(holder: WebBrowserViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), clickListener)
     }
 
     class WebBrowserViewHolder(private val binding: FragmentBrowserItemsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(webBrowserBo: WebBrowserBo) {
+        fun bind(webBrowserBo: WebBrowserBo, clickListener: IOnItemClickListener) {
 
             binding.browserFragmentLogoImage.setImageResource(webBrowserBo.browserImage)
             binding.browserFragmentTittle.text = webBrowserBo.browserName
@@ -42,7 +49,15 @@ class BrowserFragmentListAdapter :
             binding.browserFragmentCompany.text = webBrowserBo.browserCompany
             binding.browserFragmentIconMobile.isInvisible = !webBrowserBo.browserMobile
 
+            binding.browserFragmentIconWeb.setOnClickListener {
+                clickListener.onIconWebClickItem(adapterPosition,webBrowserBo)
 
+            }
         }
+    }
+
+    fun filterByOs(saveState: Set<BrowserOSEnum>){
+        val browseList = MockProvider.browserList
+        submitList(browseList.filter { it.compatibleOS.containsAll(saveState) })
     }
 }

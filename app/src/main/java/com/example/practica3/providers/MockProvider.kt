@@ -5,7 +5,7 @@ import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
 
 class MockProvider {
-    companion object{
+    companion object {
         val browserList = listOf(
             WebBrowserBo(
                 "Safari",
@@ -14,7 +14,10 @@ class MockProvider {
                 R.drawable.logo_alten,
                 "www.alten.es",
                 false,
-                BrowserOSEnum.ChromeOS
+                listOf(
+                    BrowserOSEnum.IOS,
+                    BrowserOSEnum.MacOs
+                )
             ),
             WebBrowserBo(
                 "Chrome",
@@ -23,7 +26,13 @@ class MockProvider {
                 R.drawable.logo_alten,
                 "www.alten.es",
                 true,
-                BrowserOSEnum.ChromeOS
+                listOf(
+                    BrowserOSEnum.IOS,
+                    BrowserOSEnum.MacOs,
+                    BrowserOSEnum.Android,
+                    BrowserOSEnum.Linux,
+                    BrowserOSEnum.Windows
+                )
             ),
             WebBrowserBo(
                 "Firefox",
@@ -32,7 +41,13 @@ class MockProvider {
                 R.drawable.logo_alten,
                 "www.alten.es",
                 true,
-                BrowserOSEnum.ChromeOS
+                listOf(
+                    BrowserOSEnum.IOS,
+                    BrowserOSEnum.MacOs,
+                    BrowserOSEnum.Android,
+                    BrowserOSEnum.Linux,
+                    BrowserOSEnum.Windows
+                )
             ),
             WebBrowserBo(
                 "Edge",
@@ -41,7 +56,10 @@ class MockProvider {
                 R.drawable.logo_alten,
                 "www.alten.es",
                 true,
-                BrowserOSEnum.ChromeOS
+                listOf(
+                    BrowserOSEnum.Android,
+                    BrowserOSEnum.Windows
+                )
             ),
             WebBrowserBo(
                 "Opera",
@@ -50,7 +68,13 @@ class MockProvider {
                 R.drawable.logo_alten,
                 "www.alten.es",
                 true,
-                BrowserOSEnum.ChromeOS
+                listOf(
+                    BrowserOSEnum.IOS,
+                    BrowserOSEnum.MacOs,
+                    BrowserOSEnum.Android,
+                    BrowserOSEnum.Linux,
+                    BrowserOSEnum.Windows
+                )
             )
         )
     }

@@ -1,10 +1,10 @@
 package com.example.practica3.enums
 
 enum class BrowserOSEnum {
-    WINDOWS,
-    MAC_OS,
-    LINUX,
-    ANDROID,
+    Windows,
+    MacOs,
+    Linux,
+    Android,
     IOS,
     ChromeOS
 }

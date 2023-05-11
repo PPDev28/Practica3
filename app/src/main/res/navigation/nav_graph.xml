@@ -4,11 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/launcherFragment">
-    <activity
-        android:id="@+id/navigationActivity2"
-        android:name="com.example.practica3.activities.NavigationActivity"
-        android:label="navigation_main"
-        tools:layout="@layout/navigation_main" />
+
     <fragment
         android:id="@+id/launcherFragment"
         android:name="com.example.practica3.fragments.LauncherFragment"
@@ -22,5 +18,18 @@
         android:id="@+id/browsersFragment"
         android:name="com.example.practica3.fragments.BrowsersFragment"
         android:label="fragment_web_browser"
-        tools:layout="@layout/fragment_browser" />
+        tools:layout="@layout/fragment_browser">
+        <action
+            android:id="@+id/action_browsersFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.example.practica3.fragments.WebViewFragment"
+        android:label="fragment_web_view"
+        tools:layout="@layout/fragment_web_view">
+        <action
+            android:id="@+id/action_webViewFragment_to_browsersFragment"
+            app:destination="@id/browsersFragment" />
+    </fragment>
 </navigation>

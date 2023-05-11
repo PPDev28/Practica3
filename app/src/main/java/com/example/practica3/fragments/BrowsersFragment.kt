@@ -5,7 +5,10 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practica3.R
 import com.example.practica3.adapters.BrowserFragmentListAdapter
@@ -15,23 +18,28 @@ import com.example.practica3.models.WebBrowserBo
 import com.example.practica3.providers.MockProvider.Companion.browserList
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class BrowsersFragment : Fragment(R.layout.fragment_browser) {
+class BrowsersFragment : Fragment(R.layout.fragment_browser), BrowserFragmentListAdapter.IOnItemClickListener {
 
 
     private val binding by lazy { FragmentBrowserBinding.inflate(layoutInflater) }
-    private val browserAdapter by lazy { BrowserFragmentListAdapter() }
+    private val browserAdapter by lazy { BrowserFragmentListAdapter(this) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
+
+//        binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
+//            val position = binding.chipGroup.indexOfChild(group.findViewById((checkedId)))
+//            binding.chipGroup.removeViewAt(position)
+//        }
+//
 
         setUpAdapter()
         setupMenu()
@@ -63,22 +71,29 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser) {
         val opciones = BrowserOSEnum.values().map { it.name }.toTypedArray()
         val checkedItems = BooleanArray(opciones.size) { false }
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Selecciona tus opciones")
+        MaterialAlertDialogBuilder(requireContext()).setTitle("Selecciona tus opciones")
             .setMultiChoiceItems(opciones, checkedItems) { dialog, which, isChecked ->
-                // Aquí puedes manejar la lógica de lo que sucede cuando se selecciona o deselecciona una opción
-            }
-            .setPositiveButton("Aceptar") { dialog, which ->
-                // Aquí puedes manejar la lógica de lo que sucede cuando se pulsa el botón Aceptar
-            }
-            .setNegativeButton("Cancelar", null)
-            .show()
+                checkedItems[which] = isChecked
+
+            }.setPositiveButton("Aceptar") { dialog, which ->
+                val saveState = mutableSetOf<BrowserOSEnum>()
+                for (i in opciones.indices){
+                    if (checkedItems[i]) {
+                        saveState.add(BrowserOSEnum.valueOf(opciones[i]))
+                    }
+                }
+                browserAdapter.filterByOs(saveState)
+            }.setNegativeButton("Cancelar", null).show()
     }
 
+    private fun newChip(){
+
+    }
 
     private fun showSortDialog() {
         val radioButtonList = arrayOf("Nombre", "Compañía", "Creación")
         var selectedRadioButton = 0
+
         val builder = context?.let { MaterialAlertDialogBuilder(it) }
         builder?.setTitle("Ordenar")
         builder?.setSingleChoiceItems(radioButtonList, selectedRadioButton) { _, which ->
@@ -106,19 +121,24 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser) {
 
     private fun mockBrowser(number: Int): List<WebBrowserBo> {
 
-        return browserList.take(number).sortedBy { it.browserName }
+        if (number > browserList.size) {
 
-//        val rootView: View = requireActivity().findViewById(android.R.id.content)
-//            println("La lista solo tiene ${browserList.size} navegadores.")
-//            Snackbar.make(rootView, "Mensaje de ejemplo", Snackbar.LENGTH_SHORT).show()
+            Toast.makeText(context, "No hay tantos navegadores para mostrar", Toast.LENGTH_SHORT)
+                .show()
 
-//        return if (number > browserList.size) {
-//            println("La lista solo tiene ${browserList.size} navegadores.")
-//            Snackbar.make(rootView, "Mensaje de ejemplo", Snackbar.LENGTH_SHORT).show()
-//
-//        } else {
-//            browserList.take(number).sortedBy { it.browserName }
-//        }
+        } else {
+            return browserList.take(number).sortedBy { it.browserName }
+        }
+
+        return browserList
+    }
+
+    override fun onIconWebClickItem(position: Int,webBrowserBo: WebBrowserBo) {
+
+        val bundleNameObject = bundleOf("browserName" to webBrowserBo.browserName)
+        val bundleUrlAdress = bundleOf("browserName" to webBrowserBo.browserWeb)
+        findNavController().navigate(R.id.action_browsersFragment_to_webViewFragment,bundleUrlAdress)
 
     }
 }
+
