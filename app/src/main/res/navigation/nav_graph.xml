@@ -9,19 +9,25 @@
         android:id="@+id/launcherFragment"
         android:name="com.example.practica3.fragments.LauncherFragment"
         android:label="fragment_launcher"
+        app:popExitAnim="@animator/nav_default_pop_enter_anim"
         tools:layout="@layout/fragment_launcher">
         <action
-            android:id="@+id/action_launcherFragment_to_browsersFragment2"
-            app:destination="@id/browsersFragment" />
+            android:id="@+id/action_launcherFragment_to_browsersFragment"
+            app:popUpTo="@id/launcherFragment"
+            app:popUpToInclusive="true"
+            app:destination="@id/browsersFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/browsersFragment"
         android:name="com.example.practica3.fragments.BrowsersFragment"
         android:label="fragment_web_browser"
+        app:popExitAnim="@animator/nav_default_enter_anim"
         tools:layout="@layout/fragment_browser">
         <action
             android:id="@+id/action_browsersFragment_to_webViewFragment"
-            app:destination="@id/webViewFragment" />
+            app:destination="@id/webViewFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/webViewFragment"
@@ -30,6 +36,9 @@
         tools:layout="@layout/fragment_web_view">
         <action
             android:id="@+id/action_webViewFragment_to_browsersFragment"
-            app:destination="@id/browsersFragment" />
+            app:destination="@id/browsersFragment"
+            app:popUpTo="@id/webViewFragment"
+            app:popUpToInclusive="true"
+            />
     </fragment>
 </navigation>

@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.practica3.R
+import com.example.practica3.databinding.FragmentLauncherBinding
 
 
 class LauncherFragment : Fragment(R.layout.fragment_launcher) {
 
+    private val binding by lazy { FragmentLauncherBinding.inflate(layoutInflater) }
     private lateinit var timer: CountDownTimer
 
     companion object {
@@ -21,22 +23,14 @@ class LauncherFragment : Fragment(R.layout.fragment_launcher) {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_launcher, container, false)
+    ): View {
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         showSplashScreen()
-
-//        val newFragment = BrowsersFragment()
-//        val transaction = requireFragmentManager().beginTransaction()
-//        transaction.replace(R.id.action_launcherFragment_to_browsersFragment2, newFragment)
-//        transaction.addToBackStack(null) // agregar a la pila
-//        transaction.commit()
-
     }
 
     private fun showSplashScreen() {
@@ -44,7 +38,8 @@ class LauncherFragment : Fragment(R.layout.fragment_launcher) {
             override fun onTick(millisUntilFinished: Long) {}
 
             override fun onFinish() {
-                findNavController().navigate(R.id.action_launcherFragment_to_browsersFragment2)
+                val navigate = findNavController()
+                navigate.navigate(R.id.action_launcherFragment_to_browsersFragment )
             }
         }
         timer.start()

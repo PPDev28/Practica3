@@ -9,7 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        app:elevation="6dp">
+        app:cardCornerRadius="20dp"
+        app:strokeColor="@color/project_blue"
+        app:strokeWidth="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -24,8 +26,8 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/browserFragmentLogoImage"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_margin="20dp"
                 android:src="@drawable/logo_alten"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -36,10 +38,10 @@
                 android:id="@+id/browserFragmentTittle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="90dp"
+                android:layout_marginHorizontal="100dp"
                 android:layout_marginTop="30dp"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -48,10 +50,10 @@
                 android:id="@+id/browserFragmentYear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="90dp"
-                android:layout_marginEnd="250dp"
+                android:layout_marginStart="100dp"
+                android:layout_marginEnd="230dp"
                 android:textColor="@color/project_blue"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toStartOf="@id/browserFragmentCompany"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/browserFragmentTittle" />
@@ -60,10 +62,11 @@
                 android:id="@+id/browserFragmentCompany"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="120dp"
+                android:layout_marginStart="140dp"
                 android:layout_marginEnd="90dp"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/browserFragmentYear"
                 app:layout_constraintTop_toBottomOf="@+id/browserFragmentTittle" />
 
@@ -74,24 +77,24 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/p3_smartphone"
+                android:contentDescription="@string/icon_mobile"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/icon_mobile" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/browserFragmentIconWeb"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginEnd="10dp"
+                android:adjustViewBounds="true"
                 android:background="@color/black"
+                android:contentDescription="@string/icon_web"
+                android:scaleType="fitCenter"
                 android:src="@drawable/p3_logo"
                 android:visibility="visible"
-                android:scaleType="fitCenter"
-                android:adjustViewBounds="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/browserFragmentIconMobile"
-                android:contentDescription="@string/icon_web" />
+                app:layout_constraintTop_toBottomOf="@+id/browserFragmentIconMobile" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

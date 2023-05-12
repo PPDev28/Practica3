@@ -12,7 +12,7 @@ class MockProvider {
                 "Apple",
                 2003,
                 R.drawable.logo_alten,
-                "www.alten.es",
+                "https://www.alten.es/",
                 false,
                 listOf(
                     BrowserOSEnum.IOS,
@@ -24,14 +24,15 @@ class MockProvider {
                 "Google",
                 2008,
                 R.drawable.logo_alten,
-                "www.alten.es",
+                "https://www.alten.es/",
                 true,
                 listOf(
                     BrowserOSEnum.IOS,
                     BrowserOSEnum.MacOs,
                     BrowserOSEnum.Android,
                     BrowserOSEnum.Linux,
-                    BrowserOSEnum.Windows
+                    BrowserOSEnum.Windows,
+                    BrowserOSEnum.ChromeOS
                 )
             ),
             WebBrowserBo(
@@ -39,7 +40,7 @@ class MockProvider {
                 "Mozilla",
                 2002,
                 R.drawable.logo_alten,
-                "www.alten.es",
+                "https://www.alten.es/",
                 true,
                 listOf(
                     BrowserOSEnum.IOS,
@@ -54,7 +55,7 @@ class MockProvider {
                 "Microsoft",
                 2015,
                 R.drawable.logo_alten,
-                "www.alten.es",
+                "https://www.alten.es/",
                 true,
                 listOf(
                     BrowserOSEnum.Android,
@@ -66,7 +67,7 @@ class MockProvider {
                 "Opera",
                 1995,
                 R.drawable.logo_alten,
-                "www.alten.es",
+                "https://www.alten.es/",
                 true,
                 listOf(
                     BrowserOSEnum.IOS,
@@ -74,6 +75,17 @@ class MockProvider {
                     BrowserOSEnum.Android,
                     BrowserOSEnum.Linux,
                     BrowserOSEnum.Windows
+                )
+            ),
+            WebBrowserBo(
+                "GNU IceCat",
+                "Proyecto GNU",
+                2008,
+                R.drawable.logo_alten,
+                "https://www.alten.es/",
+                false,
+                listOf(
+                    BrowserOSEnum.Linux,
                 )
             )
         )

@@ -7,9 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.practica3.databinding.FragmentBrowserItemsBinding
-import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
-import com.example.practica3.providers.MockProvider
 
 class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener) :
     ListAdapter<WebBrowserBo, BrowserFragmentListAdapter.WebBrowserViewHolder>(DiffCallback) {
@@ -56,8 +54,8 @@ class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener
         }
     }
 
-    fun filterByOs(saveState: Set<BrowserOSEnum>){
-        val browseList = MockProvider.browserList
-        submitList(browseList.filter { it.compatibleOS.containsAll(saveState) })
-    }
+//    fun filterByOs(saveState: Set<BrowserOSEnum>){
+//        val browseList = MockProvider.browserList
+//        submitList(browseList.filter { it.compatibleOS.containsAll(saveState) })
+//    }
 }

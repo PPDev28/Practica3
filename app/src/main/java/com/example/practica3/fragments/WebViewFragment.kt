@@ -19,29 +19,36 @@ class WebViewFragment : Fragment(R.layout.fragment_web_view) {
     ): View {
 
 
-        binding.webView.settings.setSupportZoom(true)
-        binding.webView.settings.builtInZoomControls = true
-        binding.webView.settings.displayZoomControls = true
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.webView.loadUrl("https://www.alten.es/")
 
         setUpToolbarIcon()
+        setOptionsWebView()
     }
 
     private fun setUpToolbarIcon(){
         binding.webViewToolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24)
         binding.webViewToolbar.setNavigationOnClickListener {
             findNavController().navigate(R.id.action_webViewFragment_to_browsersFragment)
+
         }
 
-        binding.webViewToolbar.title = arguments?.getString("browserName")
+        binding.webViewToolbar.title = arguments?.getString("name")
 
+    }
 
+    private fun setOptionsWebView(){
+
+        arguments?.getString("url")?.let { binding.webView.loadUrl(it) }
+
+        binding.webView.settings.setSupportZoom(true)
+        binding.webView.settings.builtInZoomControls = true
+        binding.webView.settings.displayZoomControls = true
     }
 
 }
