@@ -10,7 +10,5 @@
         android:id="@+id/launcherFragment"
         android:name="com.example.practica3.fragments.LauncherFragment"
         android:label="fragment_launcher"
-        tools:layout="@layout/fragment_launcher">
-    </fragment>
-
+        tools:layout="@layout/fragment_launcher" />
 </navigation>
