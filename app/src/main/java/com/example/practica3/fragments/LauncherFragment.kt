@@ -11,13 +11,18 @@ import com.example.practica3.databinding.FragmentLauncherBinding
 
 class LauncherFragment : Fragment(R.layout.fragment_launcher){
 
-    private val binding by lazy { FragmentLauncherBinding.inflate(layoutInflater)}
-
+    private var _binding: FragmentLauncherBinding? = null
+    private val binding get() = _binding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return binding.root
+    ): View? {
+        _binding = FragmentLauncherBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
