@@ -13,7 +13,7 @@ class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener
     ListAdapter<WebBrowserBo, BrowserFragmentListAdapter.WebBrowserViewHolder>(DiffCallback) {
 
     interface IOnItemClickListener {
-        fun onIconWebClickItem(position: Int,webBrowserBo: WebBrowserBo)
+        fun onIconWebClickItem(position: Int, webBrowserBo: WebBrowserBo)
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<WebBrowserBo>() {
@@ -48,14 +48,8 @@ class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener
             binding.browserFragmentIconMobile.isInvisible = !webBrowserBo.browserMobile
 
             binding.browserFragmentIconWeb.setOnClickListener {
-                clickListener.onIconWebClickItem(adapterPosition,webBrowserBo)
-
+                clickListener.onIconWebClickItem(adapterPosition, webBrowserBo)
             }
         }
     }
-
-//    fun filterByOs(saveState: Set<BrowserOSEnum>){
-//        val browseList = MockProvider.browserList
-//        submitList(browseList.filter { it.compatibleOS.containsAll(saveState) })
-//    }
 }

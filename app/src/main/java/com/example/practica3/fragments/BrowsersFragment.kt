@@ -6,7 +6,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,11 +23,9 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
 
     private var _binding: FragmentBrowserBinding? = null
     private val binding get() = _binding
-
-    //    private val binding by lazy { FragmentBrowserbinding?.inflate(layoutInflater) }
     private val browserAdapter by lazy { BrowserFragmentListAdapter(this) }
     private val browserListWithMockFun = mockBrowser(6)
-
+    private var savedState = mutableSetOf<BrowserOSEnum>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -40,15 +37,8 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-//        binding?.chipGroup.setOnCheckedChangeListener { group, checkedId ->
-//            val position = binding?.chipGroup.indexOfChild(group.findViewById((checkedId)))
-//            binding?.chipGroup.removeViewAt(position)
-//        }
-//
         setUpAdapter()
-        setupMenu()
-
+        setupMenuFilters()
     }
 
     override fun onDestroyView() {
@@ -61,102 +51,81 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
         browserAdapter.submitList(browserListWithMockFun)
         binding?.browserFragmentRecyclerView?.adapter = browserAdapter
         binding?.browserFragmentRecyclerView?.layoutManager = LinearLayoutManager(context)
-
     }
 
-
-    private fun setupMenu() {
+    private fun setupMenuFilters() {
 
         binding?.broserFragmentToolbar?.setOnMenuItemClickListener { item: MenuItem? ->
             when (item?.itemId) {
-                R.id.action_sorted -> showSortDialog()
-                R.id.action_filter -> showFilterDialog()
+                R.id.browser_fragment_action_sorted -> showSortDialog()
+                R.id.browser_fragment_action_filter -> showFilterDialog()
             }
             true
         }
     }
 
     private fun showFilterDialog() {
+        val browsersSuitableOS = BrowserOSEnum.values().map { it.name }.toTypedArray()
+        val checkedItems = BooleanArray(browsersSuitableOS.size) { false }
 
-        val browsersOS = BrowserOSEnum.values().map { it.name }.toTypedArray()
-        val checkedItems = BooleanArray(browsersOS.size) { false }
-
-        MaterialAlertDialogBuilder(requireContext()).setTitle("Selecciona tus opciones")
-            .setMultiChoiceItems(browsersOS, checkedItems) { dialog, which, isChecked ->
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.menu_choose_options)
+            .setMultiChoiceItems(browsersSuitableOS, checkedItems) { _, which, isChecked ->
                 checkedItems[which] = isChecked
+            }
+            .setPositiveButton(R.string.menu_accept) { _, _ ->
+                val selectedFilters = mutableSetOf<BrowserOSEnum>()
 
-            }.setPositiveButton("Aceptar") { dialog, which ->
-                val saveState = mutableSetOf<BrowserOSEnum>()
-
-                browsersOS.indices.forEach {
-                    if (checkedItems[it]) {
-                        saveState.add(BrowserOSEnum.valueOf(browsersOS[it]))
-                        addFiltertoChip(saveState)
+                for (i in browsersSuitableOS.indices) {
+                    if (checkedItems[i]) {
+                        selectedFilters.add(BrowserOSEnum.valueOf(browsersSuitableOS[i]))
                     }
                 }
 
-            }.setNegativeButton("Cancelar", null).show()
-    }
+                savedState.addAll(selectedFilters)
 
-    private fun addFiltertoChip(saveState: Set<BrowserOSEnum>) {
-
-        saveState.forEach { it ->
-
-            when (it.name) {
-                BrowserOSEnum.Windows.name -> newChipSettings(it.name, saveState)
-                BrowserOSEnum.MacOs.name -> newChipSettings(it.name, saveState)
-                BrowserOSEnum.Linux.name -> newChipSettings(it.name, saveState)
-                BrowserOSEnum.Android.name -> newChipSettings(it.name, saveState)
-                BrowserOSEnum.IOS.name -> newChipSettings(it.name, saveState)
-                BrowserOSEnum.ChromeOS.name -> newChipSettings(it.name, saveState)
+                addNewChipToChipGroup(savedState)
+                applyChipFilters(savedState)
             }
-        }
-
+            .setNegativeButton(R.string.menu_decline, null)
+            .show()
     }
 
-    private fun newChipSettings(itName: String, saveState: Set<BrowserOSEnum>) {
-
-        val compatibleOS = saveState.joinToString(", ") { it.name }
-        val existingChip = binding?.chipGroup?.findViewWithTag<Chip>(saveState.first())
-
-        if (existingChip != null) {
-            existingChip.text = compatibleOS
-        } else {
+    private fun addNewChipToChipGroup(filters: MutableSet<BrowserOSEnum>) {
+        binding?.chipGroup?.removeAllViews()
+        filters.forEach { it ->
             val newChip = Chip(context)
-            browserAdapter.submitList(browserListWithMockFun.filter {
-                it.compatibleOS.containsAll(
-                    saveState
-                )
-            })
-            newChip.text = compatibleOS
+            newChip.text = it.name
             newChip.isCloseIconVisible = true
+            newChip.setChipBackgroundColorResource(R.color.project_blue_chips)
+            newChip.tag = it.name
             binding?.chipGroup?.addView(newChip)
-            newChip.tag = saveState.first()
-
-
             newChip.setOnCloseIconClickListener {
+
                 binding?.chipGroup?.removeView(newChip)
-                browserAdapter.submitList(browserListWithMockFun.filter {
-                    it.compatibleOS.containsAll(
-                        binding?.chipGroup?.children?.map { chip -> BrowserOSEnum.valueOf(chip.tag.toString()) }
-                            ?.toList() ?: emptyList()
-                    )
-                })
+                val browserOS = BrowserOSEnum.valueOf(newChip.tag.toString())
+                savedState.remove(browserOS)
+                applyChipFilters(savedState)
             }
         }
     }
 
+    private fun applyChipFilters(filters: Set<BrowserOSEnum>) {
+        browserAdapter.submitList(browserListWithMockFun.filter { browser ->
+            filters.all { browser.compatibleOS.contains(it) }
+        })
+    }
 
     private fun showSortDialog() {
         val radioButtonList = arrayOf("Nombre", "Compañía", "Creación")
         var selectedRadioButton = 0
 
         val builder = context?.let { MaterialAlertDialogBuilder(it) }
-        builder?.setTitle("Ordenar")
+        builder?.setTitle(R.string.sort)
         builder?.setSingleChoiceItems(radioButtonList, selectedRadioButton) { _, which ->
             selectedRadioButton = which
         }
-        builder?.setPositiveButton("Aceptar") { _, _ ->
+        builder?.setPositiveButton(R.string.menu_accept) { _, _ ->
             when (selectedRadioButton) {
                 0 -> {
                     browserAdapter.submitList(browserListWithMockFun.sortedBy { it.browserName })
@@ -169,20 +138,23 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 }
             }
         }
-        builder?.setNegativeButton("Cancelar") { dialog, _ ->
+        builder?.setNegativeButton(R.string.menu_decline) { dialog, _ ->
             dialog.dismiss()
         }
-        val dialog = builder?.create()
-        dialog?.show()
+        val sortDialog = builder?.create()
+        sortDialog?.show()
     }
 
     private fun mockBrowser(number: Int): List<WebBrowserBo> {
 
         if (number > browserList.size) {
 
-            Toast.makeText(context, "No hay tantos navegadores para mostrar", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                context,
+                "No hay tantos navegadores para mostrar",
+                Toast.LENGTH_SHORT
+            )
                 .show()
-
         }
 
         return browserList.take(number).sortedBy { it.browserName }
@@ -191,12 +163,15 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     override fun onIconWebClickItem(position: Int, webBrowserBo: WebBrowserBo) {
 
         val bundleGetData = Bundle()
-        bundleGetData.putString("name", webBrowserBo.browserName)
-        bundleGetData.putString("url", webBrowserBo.browserWeb)
+        bundleGetData.putString("browserName", webBrowserBo.browserName)
+        bundleGetData.putString("browserCompany", webBrowserBo.browserCompany)
+        bundleGetData.putString("browserUrl", webBrowserBo.browserWeb)
 
-        findNavController().navigate(R.id.action_browsersFragment_to_webViewFragment, bundleGetData)
-
-
+        findNavController().navigate(
+            R.id.action_browsersFragment_to_webViewFragment,
+            bundleGetData
+        )
     }
 }
+
 

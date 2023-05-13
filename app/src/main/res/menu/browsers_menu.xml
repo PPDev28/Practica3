@@ -3,14 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_filter"
-        android:title="@string/filtrar"
+        android:id="@+id/browser_fragment_action_filter"
         android:icon="@drawable/p3_filter"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/filter"
+        app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_sorted"
-        android:title="@string/ordenar"
+        android:id="@+id/browser_fragment_action_sorted"
         android:icon="@drawable/p3_sort"
-        app:showAsAction="ifRoom"/>
-
+        android:title="@string/sort"
+        app:showAsAction="ifRoom" />
 </menu>

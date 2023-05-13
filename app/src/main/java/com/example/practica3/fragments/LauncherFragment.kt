@@ -39,7 +39,7 @@ class LauncherFragment : Fragment(R.layout.fragment_launcher) {
 
             override fun onFinish() {
                 val navigate = findNavController()
-                navigate.navigate(R.id.action_launcherFragment_to_browsersFragment )
+                navigate.navigate(R.id.action_launcherFragment_to_browsersFragment)
             }
         }
         timer.start()
