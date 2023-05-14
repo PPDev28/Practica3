@@ -6,7 +6,7 @@ data class WebBrowserBo(
     val browserName: String,
     val browserCompany: String,
     val browserCreationDate: Int,
-    val browserImage: Int,
+    val browserImage: String,
     val browserWeb: String,
     val browserMobile: Boolean,
     val compatibleOS: List<BrowserOSEnum>

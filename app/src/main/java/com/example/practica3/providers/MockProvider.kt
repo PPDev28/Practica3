@@ -1,6 +1,5 @@
 package com.example.practica3.providers
 
-import com.example.practica3.R
 import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
 
@@ -11,77 +10,70 @@ class MockProvider {
                 "Safari",
                 "Apple",
                 2003,
-                R.drawable.logo_alten,
+                "https://www.alten.com/wp-content/uploads/2019/03/LOGO_Alten_Couleurs_Black.png",
                 "https://www.alten.es/",
                 false,
                 listOf(
-                    BrowserOSEnum.IOS,
-                    BrowserOSEnum.MacOs
+                    BrowserOSEnum.iOS, BrowserOSEnum.MacOs
                 )
-            ),
-            WebBrowserBo(
+            ), WebBrowserBo(
                 "Chrome",
                 "Google",
                 2008,
-                R.drawable.logo_alten,
+                "https://www.alten.com/wp-content/uploads/2019/03/LOGO_Alten_Couleurs_Black.png",
                 "https://www.alten.es/",
                 true,
                 listOf(
-                    BrowserOSEnum.IOS,
+                    BrowserOSEnum.iOS,
                     BrowserOSEnum.MacOs,
                     BrowserOSEnum.Android,
                     BrowserOSEnum.Linux,
                     BrowserOSEnum.Windows,
                     BrowserOSEnum.ChromeOS
                 )
-            ),
-            WebBrowserBo(
+            ), WebBrowserBo(
                 "Firefox",
                 "Mozilla",
                 2002,
-                R.drawable.logo_alten,
+                "https://www.alten.com/wp-content/uploads/2019/03/LOGO_Alten_Couleurs_Black.png",
                 "https://www.alten.es/",
                 true,
                 listOf(
-                    BrowserOSEnum.IOS,
+                    BrowserOSEnum.iOS,
                     BrowserOSEnum.MacOs,
                     BrowserOSEnum.Android,
                     BrowserOSEnum.Linux,
                     BrowserOSEnum.Windows
                 )
-            ),
-            WebBrowserBo(
+            ), WebBrowserBo(
                 "Edge",
                 "Microsoft",
                 2015,
-                R.drawable.logo_alten,
+                "https://www.alten.com/wp-content/uploads/2019/03/LOGO_Alten_Couleurs_Black.png",
                 "https://www.alten.es/",
                 true,
                 listOf(
-                    BrowserOSEnum.Android,
-                    BrowserOSEnum.Windows
+                    BrowserOSEnum.Android, BrowserOSEnum.Windows
                 )
-            ),
-            WebBrowserBo(
+            ), WebBrowserBo(
                 "Opera",
                 "Opera",
                 1995,
-                R.drawable.logo_alten,
+                "https://www.alten.com/wp-content/uploads/2019/03/LOGO_Alten_Couleurs_Black.png",
                 "https://www.alten.es/",
                 true,
                 listOf(
-                    BrowserOSEnum.IOS,
+                    BrowserOSEnum.iOS,
                     BrowserOSEnum.MacOs,
                     BrowserOSEnum.Android,
                     BrowserOSEnum.Linux,
                     BrowserOSEnum.Windows
                 )
-            ),
-            WebBrowserBo(
+            ), WebBrowserBo(
                 "GNU IceCat",
                 "Proyecto GNU",
                 2008,
-                R.drawable.logo_alten,
+                "https://www.alten.com/wp-content/uploads/2019/03/LOGO_Alten_Couleurs_Black.png",
                 "https://www.alten.es/",
                 false,
                 listOf(

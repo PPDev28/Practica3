@@ -1,6 +1,8 @@
 package com.example.practica3.fragments
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -14,9 +16,15 @@ import com.example.practica3.adapters.BrowserFragmentListAdapter
 import com.example.practica3.databinding.FragmentBrowserBinding
 import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
+import com.example.practica3.models.WebBrowserDto
 import com.example.practica3.providers.MockProvider.Companion.browserList
+import com.example.practica3.retrofit.WebBrowserApiClient
+import com.example.practica3.retrofit.WebBrowserDtoMapper
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class BrowsersFragment : Fragment(R.layout.fragment_browser),
     BrowserFragmentListAdapter.IOnItemClickListener {
@@ -37,7 +45,8 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpAdapter()
+//        setUpAdapter()
+        retrofitCall()
         setupMenuFilters()
     }
 
@@ -143,6 +152,27 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
         }
         val sortDialog = builder?.create()
         sortDialog?.show()
+    }
+
+    private fun retrofitCall() {
+        val call = WebBrowserApiClient.getWebBrowserService()?.getWebBrowsers()
+        call?.enqueue(object : Callback<List<WebBrowserDto>> {
+            override fun onResponse(
+                call: Call<List<WebBrowserDto>>,
+                response: Response<List<WebBrowserDto>>
+            ) {
+                val webBrowsersDto = response.body()
+                val webBrowsersBo = webBrowsersDto?.map { dto -> WebBrowserDtoMapper().map(dto) } ?: emptyList()
+                browserAdapter.submitList(webBrowsersBo)
+                binding?.browserFragmentRecyclerView?.adapter = browserAdapter
+                binding?.browserFragmentRecyclerView?.layoutManager = LinearLayoutManager(context)
+            }
+
+            override fun onFailure(call: Call<List<WebBrowserDto>>, t: Throwable) {
+                Log.e(TAG, "Error con la lista de navegadores", t)
+
+            }
+        })
     }
 
     private fun mockBrowser(number: Int): List<WebBrowserBo> {

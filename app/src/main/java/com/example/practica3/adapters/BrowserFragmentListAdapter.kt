@@ -6,8 +6,10 @@ import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.practica3.databinding.FragmentBrowserItemsBinding
 import com.example.practica3.models.WebBrowserBo
+
 
 class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener) :
     ListAdapter<WebBrowserBo, BrowserFragmentListAdapter.WebBrowserViewHolder>(DiffCallback) {
@@ -41,7 +43,7 @@ class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener
         RecyclerView.ViewHolder(binding.root) {
         fun bind(webBrowserBo: WebBrowserBo, clickListener: IOnItemClickListener) {
 
-            binding.browserFragmentLogoImage.setImageResource(webBrowserBo.browserImage)
+            Glide.with(itemView.context).load(webBrowserBo.browserImage).into(binding.browserFragmentLogoImage)
             binding.browserFragmentTittle.text = webBrowserBo.browserName
             binding.browserFragmentYear.text = webBrowserBo.browserCreationDate.toString()
             binding.browserFragmentCompany.text = webBrowserBo.browserCompany
