@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +16,6 @@ import com.example.practica3.databinding.FragmentBrowserBinding
 import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
 import com.example.practica3.models.WebBrowserDto
-import com.example.practica3.providers.MockProvider.Companion.browserList
 import com.example.practica3.retrofit.WebBrowserApiClient
 import com.example.practica3.retrofit.WebBrowserDtoMapper
 import com.google.android.material.chip.Chip
@@ -32,7 +30,6 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     private var _binding: FragmentBrowserBinding? = null
     private val binding get() = _binding
     private val browserAdapter by lazy { BrowserFragmentListAdapter(this) }
-    private val browserListWithMockFun = mockBrowser(6)
     private var savedState = mutableSetOf<BrowserOSEnum>()
 
     override fun onCreateView(
@@ -45,21 +42,13 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        setUpAdapter()
-        retrofitCall()
+        setUpAdapterWithRetrofit()
         setupMenuFilters()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun setUpAdapter() {
-
-        browserAdapter.submitList(browserListWithMockFun)
-        binding?.browserFragmentRecyclerView?.adapter = browserAdapter
-        binding?.browserFragmentRecyclerView?.layoutManager = LinearLayoutManager(context)
     }
 
     private fun setupMenuFilters() {
@@ -120,9 +109,12 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     }
 
     private fun applyChipFilters(filters: Set<BrowserOSEnum>) {
-        browserAdapter.submitList(browserListWithMockFun.filter { browser ->
-            filters.all { browser.compatibleOS.contains(it) }
+        browserAdapter.submitList(browserAdapter.currentList.filter { browser ->
+            filters.all {
+                browser.compatibleOS.contains(it)
+            }
         })
+
     }
 
     private fun showSortDialog() {
@@ -137,13 +129,13 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
         builder?.setPositiveButton(R.string.menu_accept) { _, _ ->
             when (selectedRadioButton) {
                 0 -> {
-                    browserAdapter.submitList(browserListWithMockFun.sortedBy { it.browserName })
+                    browserAdapter.submitList(browserAdapter.currentList.sortedBy { it.browserName })
                 }
                 1 -> {
-                    browserAdapter.submitList(browserListWithMockFun.sortedBy { it.browserCompany })
+                    browserAdapter.submitList(browserAdapter.currentList.sortedBy { it.browserCompany })
                 }
                 2 -> {
-                    browserAdapter.submitList(browserListWithMockFun.sortedBy { it.browserCreationDate })
+                    browserAdapter.submitList(browserAdapter.currentList.sortedBy { it.browserCreationDate })
                 }
             }
         }
@@ -154,7 +146,7 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
         sortDialog?.show()
     }
 
-    private fun retrofitCall() {
+    private fun setUpAdapterWithRetrofit() {
         val call = WebBrowserApiClient.getWebBrowserService()?.getWebBrowsers()
         call?.enqueue(object : Callback<List<WebBrowserDto>> {
             override fun onResponse(
@@ -162,7 +154,8 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 response: Response<List<WebBrowserDto>>
             ) {
                 val webBrowsersDto = response.body()
-                val webBrowsersBo = webBrowsersDto?.map { dto -> WebBrowserDtoMapper().map(dto) } ?: emptyList()
+                val webBrowsersBo =
+                    webBrowsersDto?.map { dto -> WebBrowserDtoMapper().map(dto) } ?: emptyList()
                 browserAdapter.submitList(webBrowsersBo)
                 binding?.browserFragmentRecyclerView?.adapter = browserAdapter
                 binding?.browserFragmentRecyclerView?.layoutManager = LinearLayoutManager(context)
@@ -173,21 +166,6 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
 
             }
         })
-    }
-
-    private fun mockBrowser(number: Int): List<WebBrowserBo> {
-
-        if (number > browserList.size) {
-
-            Toast.makeText(
-                context,
-                "No hay tantos navegadores para mostrar",
-                Toast.LENGTH_SHORT
-            )
-                .show()
-        }
-
-        return browserList.take(number).sortedBy { it.browserName }
     }
 
     override fun onIconWebClickItem(position: Int, webBrowserBo: WebBrowserBo) {

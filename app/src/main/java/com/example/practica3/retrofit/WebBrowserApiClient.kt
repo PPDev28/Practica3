@@ -11,24 +11,20 @@ object WebBrowserApiClient {
 
     fun getWebBrowserService(): WebBrowserService? {
         if (webBrowserService == null) {
-            // Configuramos un interceptor para ver las trazas de la llamada al servicio GET
             val loggingInterceptor = HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             }
 
-            // Creamos un cliente OkHttp y le asignamos el interceptor
             val httpClientBuilder = OkHttpClient.Builder().apply {
                 addInterceptor(loggingInterceptor)
             }
 
-            // Creamos una instancia de Retrofit y le asignamos el cliente OkHttp
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpClientBuilder.build())
                 .build()
 
-            // Creamos una instancia de la interfaz WebBrowserService
             webBrowserService = retrofit.create(WebBrowserService::class.java)
         }
         return webBrowserService
