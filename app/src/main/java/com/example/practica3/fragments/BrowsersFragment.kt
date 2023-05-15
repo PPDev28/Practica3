@@ -16,8 +16,8 @@ import com.example.practica3.databinding.FragmentBrowserBinding
 import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
 import com.example.practica3.models.WebBrowserDto
+import com.example.practica3.models.WebBrowserDtoMapper
 import com.example.practica3.retrofit.WebBrowserApiClient
-import com.example.practica3.retrofit.WebBrowserDtoMapper
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import retrofit2.Call
@@ -31,7 +31,7 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     private val binding get() = _binding
     private val browserAdapter by lazy { BrowserFragmentListAdapter(this) }
     private var savedState = mutableSetOf<BrowserOSEnum>()
-
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -81,17 +81,18 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 }
 
                 savedState.addAll(selectedFilters)
+                Log.e("Valores en savedState", savedState.toString())
 
-                addNewChipToChipGroup(savedState)
-                applyChipFilters(savedState)
+                addNewChipToChipGroup(savedState,)
+                applyChipFilters(savedState,)
             }
             .setNegativeButton(R.string.menu_decline, null)
             .show()
     }
 
-    private fun addNewChipToChipGroup(filters: MutableSet<BrowserOSEnum>) {
+    private fun addNewChipToChipGroup(filters: MutableSet<BrowserOSEnum>, ) {
         binding?.chipGroup?.removeAllViews()
-        filters.forEach { it ->
+        filters.forEach {
             val newChip = Chip(context)
             newChip.text = it.name
             newChip.isCloseIconVisible = true
@@ -103,18 +104,26 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 binding?.chipGroup?.removeView(newChip)
                 val browserOS = BrowserOSEnum.valueOf(newChip.tag.toString())
                 savedState.remove(browserOS)
-                applyChipFilters(savedState)
+                applyChipFilters(savedState,)
+
+//                Log.e("CONTENIDO LISTA", webBrowsersBoList.toString())
+//                Log.e("Valores en savedState click", savedState.toString())
             }
         }
     }
 
-    private fun applyChipFilters(filters: Set<BrowserOSEnum>) {
-        browserAdapter.submitList(browserAdapter.currentList.filter { browser ->
-            filters.all {
-                browser.compatibleOS.contains(it)
-            }
-        })
-
+    private fun applyChipFilters(filters: MutableSet<BrowserOSEnum> ) {
+        if (filters.isEmpty()) {
+            browserAdapter.submitList(browserAdapter.currentList)
+        } else {
+            //TODO : no usar current list , sacar la lista de retrofit y pasarla utilizarla aqui
+            browserAdapter.submitList(browserAdapter.currentList.filter { browser ->
+                filters.all {
+                    browser.compatibleOS.contains(it)
+                }
+            })
+        }
+        Log.e("Valores en Filtros", filters.toString())
     }
 
     private fun showSortDialog() {
@@ -153,12 +162,15 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 call: Call<List<WebBrowserDto>>,
                 response: Response<List<WebBrowserDto>>
             ) {
-                val webBrowsersDto = response.body()
-                val webBrowsersBo =
-                    webBrowsersDto?.map { dto -> WebBrowserDtoMapper().map(dto) } ?: emptyList()
-                browserAdapter.submitList(webBrowsersBo)
+                val webBrowsersDtoList = response.body()
+                val webBrowsersBoList =
+                    (webBrowsersDtoList?.map { dto -> WebBrowserDtoMapper().map(dto) } ?: mutableListOf()) as MutableList<WebBrowserBo>
                 binding?.browserFragmentRecyclerView?.adapter = browserAdapter
                 binding?.browserFragmentRecyclerView?.layoutManager = LinearLayoutManager(context)
+                browserAdapter.submitList(webBrowsersBoList)
+
+
+                Log.e("Lista en funcion", webBrowsersBoList.toString())
             }
 
             override fun onFailure(call: Call<List<WebBrowserDto>>, t: Throwable) {
@@ -167,6 +179,7 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
             }
         })
     }
+
 
     override fun onIconWebClickItem(position: Int, webBrowserBo: WebBrowserBo) {
 
