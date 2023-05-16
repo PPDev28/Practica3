@@ -43,7 +43,8 @@ class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener
         RecyclerView.ViewHolder(binding.root) {
         fun bind(webBrowserBo: WebBrowserBo, clickListener: IOnItemClickListener) {
 
-            Glide.with(itemView.context).load(webBrowserBo.browserImage).into(binding.browserFragmentLogoImage)
+            Glide.with(itemView.context).load(webBrowserBo.browserImage)
+                .into(binding.browserFragmentLogoImage)
             binding.browserFragmentTittle.text = webBrowserBo.browserName
             binding.browserFragmentYear.text = webBrowserBo.browserCreationDate.toString()
             binding.browserFragmentCompany.text = webBrowserBo.browserCompany

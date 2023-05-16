@@ -19,7 +19,6 @@ class WebViewFragment : Fragment(R.layout.fragment_web_view) {
     ): View? {
         _binding = FragmentWebViewBinding.inflate(inflater, container, false)
         return binding?.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

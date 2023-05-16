@@ -6,12 +6,10 @@
     android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
+        style="@style/CardView.CustomDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        app:cardCornerRadius="20dp"
-        app:strokeColor="@color/project_blue"
-        app:strokeWidth="4dp">
+        android:layout_margin="20dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,9 +24,11 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/browserFragmentLogoImage"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_margin="20dp"
+                android:maxWidth="80dp"
+                android:maxHeight="80dp"
                 android:src="@drawable/logo_alten"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="100dp"
                 android:layout_marginTop="30dp"
-                android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +59,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/browserFragmentYear"
@@ -85,13 +83,10 @@
                 android:background="@drawable/p3_logo"
                 android:backgroundTint="#FF0000"
                 android:contentDescription="@string/web_button_content_description"
-                android:outlineAmbientShadowColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/browserFragmentIconMobile" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
 </LinearLayout>

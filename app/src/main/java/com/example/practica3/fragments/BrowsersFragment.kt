@@ -30,8 +30,9 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     private var _binding: FragmentBrowserBinding? = null
     private val binding get() = _binding
     private val browserAdapter by lazy { BrowserFragmentListAdapter(this) }
-    private var savedState = mutableSetOf<BrowserOSEnum>()
-    
+    private var savedStateCheckBoxes = mutableSetOf<BrowserOSEnum>()
+    private var webBrowserList: MutableList<WebBrowserBo> = mutableListOf()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -41,6 +42,7 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         setUpAdapterWithRetrofit()
         setupMenuFilters()
@@ -80,19 +82,18 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                     }
                 }
 
-                savedState.addAll(selectedFilters)
-                Log.e("Valores en savedState", savedState.toString())
-
-                addNewChipToChipGroup(savedState,)
-                applyChipFilters(savedState,)
+                savedStateCheckBoxes.addAll(selectedFilters)
+                addNewChipToChipGroup(savedStateCheckBoxes)
+                applyChipFilters(savedStateCheckBoxes)
             }
             .setNegativeButton(R.string.menu_decline, null)
             .show()
     }
 
-    private fun addNewChipToChipGroup(filters: MutableSet<BrowserOSEnum>, ) {
+    private fun addNewChipToChipGroup(savedState: MutableSet<BrowserOSEnum>) {
         binding?.chipGroup?.removeAllViews()
-        filters.forEach {
+
+        savedState.forEach {
             val newChip = Chip(context)
             newChip.text = it.name
             newChip.isCloseIconVisible = true
@@ -103,39 +104,40 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
 
                 binding?.chipGroup?.removeView(newChip)
                 val browserOS = BrowserOSEnum.valueOf(newChip.tag.toString())
-                savedState.remove(browserOS)
-                applyChipFilters(savedState,)
 
-//                Log.e("CONTENIDO LISTA", webBrowsersBoList.toString())
-//                Log.e("Valores en savedState click", savedState.toString())
+                savedState.remove(browserOS)
+                applyChipFilters(savedState)
             }
         }
     }
 
-    private fun applyChipFilters(filters: MutableSet<BrowserOSEnum> ) {
-        if (filters.isEmpty()) {
-            browserAdapter.submitList(browserAdapter.currentList)
-        } else {
-            //TODO : no usar current list , sacar la lista de retrofit y pasarla utilizarla aqui
-            browserAdapter.submitList(browserAdapter.currentList.filter { browser ->
-                filters.all {
-                    browser.compatibleOS.contains(it)
+    private fun applyChipFilters(savedState: MutableSet<BrowserOSEnum>) {
+
+        if (savedState.isNotEmpty()) {
+
+            val filteredList = webBrowserList.filter { browserOS ->
+                savedState.all {
+                    browserOS.compatibleOS.contains(it)
                 }
-            })
+            }
+            browserAdapter.submitList(filteredList)
+
+        } else {
+            browserAdapter.submitList(webBrowserList)
         }
-        Log.e("Valores en Filtros", filters.toString())
+
     }
 
     private fun showSortDialog() {
         val radioButtonList = arrayOf("Nombre", "Compañía", "Creación")
         var selectedRadioButton = 0
 
-        val builder = context?.let { MaterialAlertDialogBuilder(it) }
-        builder?.setTitle(R.string.sort)
-        builder?.setSingleChoiceItems(radioButtonList, selectedRadioButton) { _, which ->
+        val dialogBuilder = context?.let { MaterialAlertDialogBuilder(it) }
+        dialogBuilder?.setTitle(R.string.sort)
+        dialogBuilder?.setSingleChoiceItems(radioButtonList, selectedRadioButton) { _, which ->
             selectedRadioButton = which
         }
-        builder?.setPositiveButton(R.string.menu_accept) { _, _ ->
+        dialogBuilder?.setPositiveButton(R.string.menu_accept) { _, _ ->
             when (selectedRadioButton) {
                 0 -> {
                     browserAdapter.submitList(browserAdapter.currentList.sortedBy { it.browserName })
@@ -148,14 +150,19 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 }
             }
         }
-        builder?.setNegativeButton(R.string.menu_decline) { dialog, _ ->
+        dialogBuilder?.setNegativeButton(R.string.menu_decline) { dialog, _ ->
             dialog.dismiss()
         }
-        val sortDialog = builder?.create()
+        val sortDialog = dialogBuilder?.create()
         sortDialog?.show()
     }
 
+
     private fun setUpAdapterWithRetrofit() {
+
+        binding?.browserFragmentRecyclerView?.adapter = browserAdapter
+        binding?.browserFragmentRecyclerView?.layoutManager = LinearLayoutManager(context)
+
         val call = WebBrowserApiClient.getWebBrowserService()?.getWebBrowsers()
         call?.enqueue(object : Callback<List<WebBrowserDto>> {
             override fun onResponse(
@@ -163,26 +170,25 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 response: Response<List<WebBrowserDto>>
             ) {
                 val webBrowsersDtoList = response.body()
-                val webBrowsersBoList =
-                    (webBrowsersDtoList?.map { dto -> WebBrowserDtoMapper().map(dto) } ?: mutableListOf()) as MutableList<WebBrowserBo>
-                binding?.browserFragmentRecyclerView?.adapter = browserAdapter
-                binding?.browserFragmentRecyclerView?.layoutManager = LinearLayoutManager(context)
-                browserAdapter.submitList(webBrowsersBoList)
+                val webBrowserBoList2 =
+                    (webBrowsersDtoList?.map { dto -> WebBrowserDtoMapper().map(dto) }
+                        ?: mutableListOf()) as MutableList<WebBrowserBo>
 
+                this@BrowsersFragment.webBrowserList.clear()
+                this@BrowsersFragment.webBrowserList.addAll(webBrowserBoList2)
+                browserAdapter.submitList(webBrowserBoList2)
 
-                Log.e("Lista en funcion", webBrowsersBoList.toString())
+                Log.e("Lista en funcion", webBrowserBoList2.toString())
+                Log.e("Lista en secundaria en funcion", webBrowserList.toString())
             }
 
-            override fun onFailure(call: Call<List<WebBrowserDto>>, t: Throwable) {
-                Log.e(TAG, "Error con la lista de navegadores", t)
-
+            override fun onFailure(call: Call<List<WebBrowserDto>>, error: Throwable) {
+                Log.e(TAG, "Error with the web browser list", error)
             }
         })
     }
 
-
     override fun onIconWebClickItem(position: Int, webBrowserBo: WebBrowserBo) {
-
         val bundleGetData = Bundle()
         bundleGetData.putString("browserName", webBrowserBo.browserName)
         bundleGetData.putString("browserCompany", webBrowserBo.browserCompany)
@@ -193,6 +199,6 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
             bundleGetData
         )
     }
-}
 
+}
 
