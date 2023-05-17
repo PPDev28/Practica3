@@ -47,6 +47,7 @@ class LauncherFragment : Fragment(R.layout.fragment_launcher) {
     }
 
     override fun onDestroyView() {
+        _binding = null
         super.onDestroyView()
         timer.cancel()
     }
