@@ -13,7 +13,7 @@ import com.example.practica3.databinding.FragmentLauncherBinding
 
 class LauncherFragment : Fragment(R.layout.fragment_launcher) {
 
-    private val binding by lazy { FragmentLauncherBinding.inflate(layoutInflater) }
+    private var _binding: FragmentLauncherBinding? = null
     private lateinit var timer: CountDownTimer
 
     companion object {
@@ -23,14 +23,22 @@ class LauncherFragment : Fragment(R.layout.fragment_launcher) {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return binding.root
+    ): View? {
+        _binding = FragmentLauncherBinding.inflate(inflater, container, false)
+        return _binding?.root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         showSplashScreen()
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+        timer.cancel()
     }
 
     private fun showSplashScreen() {
@@ -43,10 +51,5 @@ class LauncherFragment : Fragment(R.layout.fragment_launcher) {
             }
         }
         timer.start()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        timer.cancel()
     }
 }
