@@ -175,7 +175,7 @@ class BrowsersFragment : Fragment(),
         bundleGetData.putString(BROWSER_URL, webBrowserBo.browserWeb)
 
         findNavController().navigate(
-            R.id.action_browsersFragment_to_webViewFragment,
+            R.id.action_browsers_fragment_to_web_view_fragment,
             bundleGetData
         )
     }

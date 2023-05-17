@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,11 +12,12 @@
         android:label="fragment_launcher"
         tools:layout="@layout/fragment_launcher">
         <action
-            android:id="@+id/action_launcherFragment_to_browsersFragment"
+            android:id="@+id/action_launcher_fragment_to_browsers_fragment"
             app:destination="@id/browsersFragment"
             app:popUpTo="@id/launcherFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/browsersFragment"
         android:name="com.example.practica3.fragments.BrowsersFragment"
@@ -23,18 +25,20 @@
         app:popExitAnim="@animator/nav_default_enter_anim"
         tools:layout="@layout/fragment_browser">
         <action
-            android:id="@+id/action_browsersFragment_to_webViewFragment"
+            android:id="@+id/action_browsers_fragment_to_web_view_fragment"
             app:destination="@id/webViewFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/webViewFragment"
         android:name="com.example.practica3.fragments.WebViewFragment"
         android:label="fragment_web_view"
         tools:layout="@layout/fragment_web_view">
         <action
-            android:id="@+id/action_webViewFragment_to_browsersFragment"
+            android:id="@+id/action_web_view_fragment_to_browsers_fragment"
             app:destination="@id/browsersFragment"
             app:popUpTo="@id/webViewFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
 </navigation>

@@ -22,7 +22,6 @@ class WebViewFragment : Fragment() {
     ): View? {
         binding = FragmentWebViewBinding.inflate(inflater, container, false)
         return binding?.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,7 +40,7 @@ class WebViewFragment : Fragment() {
         binding?.webViewToolbar?.setNavigationIcon(R.drawable.baseline_arrow_back_24)
         binding?.webViewToolbar?.setNavigationOnClickListener {
 
-            findNavController().navigate(R.id.action_webViewFragment_to_browsersFragment)
+            findNavController().navigate(R.id.action_web_view_fragment_to_browsers_fragment)
         }
 
         val titleName = arguments?.getString(BROWSER_NAME)

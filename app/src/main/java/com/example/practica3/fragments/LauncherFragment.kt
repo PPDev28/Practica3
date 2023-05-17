@@ -12,20 +12,19 @@ import com.example.practica3.databinding.FragmentLauncherBinding
 
 
 class LauncherFragment : Fragment() {
-
-    private var _binding: FragmentLauncherBinding? = null
-    private lateinit var timer: CountDownTimer
-
     companion object {
         const val SPLASH_SCREEN_TIMEOUT = 1000L
     }
+
+    private var binding: FragmentLauncherBinding? = null
+    private lateinit var timer: CountDownTimer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentLauncherBinding.inflate(inflater, container, false)
-        return _binding?.root
+        binding = FragmentLauncherBinding.inflate(inflater, container, false)
+        return binding?.root
     }
 
 
@@ -36,18 +35,20 @@ class LauncherFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        _binding = null
+        binding = null
         timer.cancel()
         super.onDestroyView()
     }
 
     private fun showSplashScreen() {
         timer = object : CountDownTimer(SPLASH_SCREEN_TIMEOUT, 1000) {
-            override fun onTick(millisUntilFinished: Long) {}
+            override fun onTick(millisUntilFinished: Long) {
+                /* no-op */
+            }
 
             override fun onFinish() {
                 val navigate = findNavController()
-                navigate.navigate(R.id.action_launcherFragment_to_browsersFragment)
+                navigate.navigate(R.id.action_launcher_fragment_to_browsers_fragment)
             }
         }
         timer.start()
