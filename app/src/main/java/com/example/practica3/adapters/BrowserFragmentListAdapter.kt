@@ -10,21 +10,10 @@ import com.example.practica3.databinding.FragmentBrowserItemsBinding
 import com.example.practica3.models.WebBrowserBo
 
 class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener) :
-    ListAdapter<WebBrowserBo, BrowserFragmentListAdapter.WebBrowserViewHolder>(DiffCallback) {
+    ListAdapter<WebBrowserBo, BrowserFragmentListAdapter.WebBrowserViewHolder>(DiffCallback()) {
 
     interface IOnItemClickListener {
         fun onIconWebClickItem(position: Int, webBrowserBo: WebBrowserBo)
-    }
-
-    companion object DiffCallback : DiffUtil.ItemCallback<WebBrowserBo>() {
-        override fun areItemsTheSame(oldItem: WebBrowserBo, newItem: WebBrowserBo): Boolean {
-            return oldItem === newItem
-        }
-
-        override fun areContentsTheSame(oldItem: WebBrowserBo, newItem: WebBrowserBo): Boolean {
-            return oldItem.browserName == newItem.browserName
-        }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WebBrowserViewHolder {
@@ -40,16 +29,28 @@ class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener
     class WebBrowserViewHolder(private val binding: FragmentBrowserItemsBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(webBrowserBo: WebBrowserBo, clickListener: IOnItemClickListener) {
+            with(binding) {
+                browserFragmentLogoImage.setImageResource(webBrowserBo.browserImage)
+                browserFragmentTittle.text = webBrowserBo.browserName
+                browserFragmentYear.text = webBrowserBo.browserCreationDate.toString()
+                browserFragmentCompany.text = webBrowserBo.browserCompany
+                browserFragmentIconMobile.isInvisible = !webBrowserBo.browserMobile
 
-            binding.browserFragmentLogoImage.setImageResource(webBrowserBo.browserImage)
-            binding.browserFragmentTittle.text = webBrowserBo.browserName
-            binding.browserFragmentYear.text = webBrowserBo.browserCreationDate.toString()
-            binding.browserFragmentCompany.text = webBrowserBo.browserCompany
-            binding.browserFragmentIconMobile.isInvisible = !webBrowserBo.browserMobile
-
-            binding.browserFragmentIconWeb.setOnClickListener {
-                clickListener.onIconWebClickItem(adapterPosition, webBrowserBo)
+                browserFragmentIconWeb.setOnClickListener {
+                    clickListener.onIconWebClickItem(adapterPosition, webBrowserBo)
+                }
             }
         }
+    }
+
+    class DiffCallback() : DiffUtil.ItemCallback<WebBrowserBo>() {
+        override fun areItemsTheSame(oldItem: WebBrowserBo, newItem: WebBrowserBo): Boolean {
+            return oldItem === newItem
+        }
+
+        override fun areContentsTheSame(oldItem: WebBrowserBo, newItem: WebBrowserBo): Boolean {
+            return oldItem.browserName == newItem.browserName
+        }
+
     }
 }

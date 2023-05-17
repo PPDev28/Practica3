@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practica3.R
 import com.example.practica3.adapters.BrowserFragmentListAdapter
+import com.example.practica3.constants.*
 import com.example.practica3.databinding.FragmentBrowserBinding
 import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
@@ -18,11 +19,10 @@ import com.example.practica3.providers.MockProvider.Companion.browserList
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class BrowsersFragment : Fragment(R.layout.fragment_browser),
+class BrowsersFragment : Fragment(),
     BrowserFragmentListAdapter.IOnItemClickListener {
 
-    private var _binding: FragmentBrowserBinding? = null
-    private val binding get() = _binding
+    private var binding: FragmentBrowserBinding? = null
     private val browserAdapter by lazy { BrowserFragmentListAdapter(this) }
     private val browserListWithMockFun = mockBrowser(6)
     private var savedState = mutableSetOf<BrowserOSEnum>()
@@ -30,7 +30,7 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentBrowserBinding.inflate(inflater, container, false)
+        binding = FragmentBrowserBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
@@ -42,15 +42,15 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     }
 
     override fun onDestroyView() {
+        binding = null
         super.onDestroyView()
-        _binding = null
     }
 
     private fun setUpAdapter() {
 
-        browserAdapter.submitList(browserListWithMockFun)
         binding?.browserFragmentRecyclerView?.adapter = browserAdapter
         binding?.browserFragmentRecyclerView?.layoutManager = LinearLayoutManager(context)
+        browserAdapter.submitList(browserListWithMockFun)
     }
 
     private fun setupMenuFilters() {
@@ -74,21 +74,28 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 checkedItems[which] = isChecked
             }
             .setPositiveButton(R.string.menu_accept) { _, _ ->
-                val selectedFilters = mutableSetOf<BrowserOSEnum>()
 
-                for (i in browsersSuitableOS.indices) {
-                    if (checkedItems[i]) {
-                        selectedFilters.add(BrowserOSEnum.valueOf(browsersSuitableOS[i]))
-                    }
-                }
-
-                savedState.addAll(selectedFilters)
-
+                dialogCheckedItemsValue(browsersSuitableOS, checkedItems)
                 addNewChipToChipGroup(savedState)
                 applyChipFilters(savedState)
             }
             .setNegativeButton(R.string.menu_decline, null)
             .show()
+    }
+
+    private fun dialogCheckedItemsValue(
+        browsersSuitableOS: Array<String>,
+        checkedItems: BooleanArray
+    ) {
+        val selectedFilters = mutableSetOf<BrowserOSEnum>()
+
+        for (i in browsersSuitableOS.indices) {
+            if (checkedItems[i]) {
+                selectedFilters.add(BrowserOSEnum.valueOf(browsersSuitableOS[i]))
+            }
+        }
+
+        savedState.addAll(selectedFilters)
     }
 
     private fun addNewChipToChipGroup(filters: MutableSet<BrowserOSEnum>) {
@@ -127,13 +134,13 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
         }
         builder?.setPositiveButton(R.string.menu_accept) { _, _ ->
             when (selectedRadioButton) {
-                0 -> {
+                SORT_BY_NAME -> {
                     browserAdapter.submitList(browserListWithMockFun.sortedBy { it.browserName })
                 }
-                1 -> {
+                SORT_BY_COMPANY -> {
                     browserAdapter.submitList(browserListWithMockFun.sortedBy { it.browserCompany })
                 }
-                2 -> {
+                SORT_BY_CREATION_DATE -> {
                     browserAdapter.submitList(browserListWithMockFun.sortedBy { it.browserCreationDate })
                 }
             }
@@ -163,9 +170,9 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     override fun onIconWebClickItem(position: Int, webBrowserBo: WebBrowserBo) {
 
         val bundleGetData = Bundle()
-        bundleGetData.putString("browserName", webBrowserBo.browserName)
-        bundleGetData.putString("browserCompany", webBrowserBo.browserCompany)
-        bundleGetData.putString("browserUrl", webBrowserBo.browserWeb)
+        bundleGetData.putString(BROWSER_NAME, webBrowserBo.browserName)
+        bundleGetData.putString(BROWSER_COMPANY, webBrowserBo.browserCompany)
+        bundleGetData.putString(BROWSER_URL, webBrowserBo.browserWeb)
 
         findNavController().navigate(
             R.id.action_browsersFragment_to_webViewFragment,

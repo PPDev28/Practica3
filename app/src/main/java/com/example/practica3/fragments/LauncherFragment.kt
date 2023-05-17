@@ -11,7 +11,7 @@ import com.example.practica3.R
 import com.example.practica3.databinding.FragmentLauncherBinding
 
 
-class LauncherFragment : Fragment(R.layout.fragment_launcher) {
+class LauncherFragment : Fragment() {
 
     private var _binding: FragmentLauncherBinding? = null
     private lateinit var timer: CountDownTimer
@@ -37,8 +37,8 @@ class LauncherFragment : Fragment(R.layout.fragment_launcher) {
 
     override fun onDestroyView() {
         _binding = null
-        super.onDestroyView()
         timer.cancel()
+        super.onDestroyView()
     }
 
     private fun showSplashScreen() {
