@@ -1,4 +1,4 @@
-package com.example.practica3
+package com.example.practica3.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

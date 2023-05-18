@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">Practica3</string>
+    <string name="top_toolbar_title">Navegadores</string>
+    <string name="filter">Filtrar</string>
+    <string name="sort">Ordenar</string>
+    <string name="icon_mobile">Icon mobile</string>
+    <string name="icon_web">Icon web</string>
+    <string name="error_inflate_list">Error inflando la lista</string>
+    <string name="windows">Windows</string>
+    <string name="macos">MacOs</string>
+    <string name="android">Android</string>
+    <string name="ios">IOS</string>
+    <string name="linux">Linux</string>
+    <string name="chromeos">ChromeOS</string>
+    <string name="web_button_content_description">Web Button</string>
+    <string name="menu_accept">Aceptar</string>
+    <string name="menu_decline">Cancelar</string>
+    <string name="menu_choose_options">Selecciona tus opciones</string>
 </resources>
