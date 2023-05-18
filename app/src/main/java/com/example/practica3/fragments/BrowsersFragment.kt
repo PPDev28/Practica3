@@ -185,9 +185,6 @@ class BrowsersFragment : Fragment(),
                 this@BrowsersFragment.webBrowserList.clear()
                 this@BrowsersFragment.webBrowserList.addAll(webBrowserBoList2)
                 browserAdapter.submitList(webBrowserBoList2)
-
-                Log.e("Lista en funcion", webBrowserBoList2.toString())
-                Log.e("Lista en secundaria en funcion", webBrowserList.toString())
             }
 
             override fun onFailure(call: Call<List<WebBrowserDto>>, error: Throwable) {
