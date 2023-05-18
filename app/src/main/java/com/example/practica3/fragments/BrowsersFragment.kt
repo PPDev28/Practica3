@@ -1,12 +1,11 @@
 package com.example.practica3.fragments
 
-import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +16,7 @@ import com.example.practica3.databinding.FragmentBrowserBinding
 import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo
 import com.example.practica3.models.WebBrowserDto
-import com.example.practica3.models.WebBrowserDtoMapper
+import com.example.practica3.models.toBO
 import com.example.practica3.retrofit.WebBrowserApiClient
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -177,18 +176,22 @@ class BrowsersFragment : Fragment(),
                 call: Call<List<WebBrowserDto>>,
                 response: Response<List<WebBrowserDto>>
             ) {
-                val webBrowsersDtoList = response.body()
-                val webBrowserBoList2 =
-                    (webBrowsersDtoList?.map { dto -> WebBrowserDtoMapper().map(dto) }
-                        ?: mutableListOf()) as MutableList<WebBrowserBo>
-
-                this@BrowsersFragment.webBrowserList.clear()
-                this@BrowsersFragment.webBrowserList.addAll(webBrowserBoList2)
-                browserAdapter.submitList(webBrowserBoList2)
+                if (response.isSuccessful) {
+                    val webBrowsersDtoList = response.body()
+                    val webBrowserBoList2 =
+                        webBrowsersDtoList?.map { dto -> dto.toBO() } ?: listOf()
+                    this@BrowsersFragment.webBrowserList.clear()
+                    this@BrowsersFragment.webBrowserList.addAll(webBrowserBoList2)
+                    browserAdapter.submitList(webBrowserBoList2)
+                }
             }
 
             override fun onFailure(call: Call<List<WebBrowserDto>>, error: Throwable) {
-                Log.e(TAG, "Error with the web browser list", error)
+                Toast.makeText(
+                    context,
+                    "Error.No se obtuvieron los datos correctamente",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
