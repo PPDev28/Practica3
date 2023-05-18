@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.practica3.R
 import com.example.practica3.adapters.BrowserFragmentListAdapter
+import com.example.practica3.constants.*
 import com.example.practica3.databinding.FragmentBrowserBinding
 import com.example.practica3.enums.BrowserOSEnum
 import com.example.practica3.models.WebBrowserBo

@@ -11,7 +11,7 @@ import com.example.practica3.databinding.FragmentBrowserItemsBinding
 import com.example.practica3.models.WebBrowserBo
 
 class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener) :
-    ListAdapter<WebBrowserBo, BrowserFragmentListAdapter.WebBrowserViewHolder>(DiffCallback) {
+    ListAdapter<WebBrowserBo, BrowserFragmentListAdapter.WebBrowserViewHolder>(DiffCallback()) {
 
     interface IOnItemClickListener {
         fun onIconWebClickItem(position: Int, webBrowserBo: WebBrowserBo)
@@ -32,14 +32,13 @@ class BrowserFragmentListAdapter(private val clickListener: IOnItemClickListener
         fun bind(webBrowserBo: WebBrowserBo, clickListener: IOnItemClickListener) {
             with(binding) {
                 Glide.with(itemView.context).load(webBrowserBo.browserImage)
-                    .into(binding.browserFragmentLogoImage)
-                browserFragmentLogoImage.setImageResource(webBrowserBo.browserImage)
-                browserFragmentTittle.text = webBrowserBo.browserName
-                browserFragmentYear.text = webBrowserBo.browserCreationDate.toString()
-                browserFragmentCompany.text = webBrowserBo.browserCompany
-                browserFragmentIconMobile.isInvisible = !webBrowserBo.browserMobile
+                    .into(binding.browsersImgLogo)
+                browsersLabelTopTittle.text = webBrowserBo.browserName
+                browsersLabelCreationYear.text = webBrowserBo.browserCreationDate.toString()
+                browsersLabelCompany.text = webBrowserBo.browserCompany
+                browsersImgMobileAvailable.isInvisible = !webBrowserBo.browserMobile
 
-                browserFragmentIconWeb.setOnClickListener {
+                browserImgWebSite.setOnClickListener {
                     clickListener.onIconWebClickItem(adapterPosition, webBrowserBo)
                 }
             }
