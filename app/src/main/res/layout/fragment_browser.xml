@@ -7,7 +7,6 @@
     android:orientation="vertical"
     tools:context=".fragments.BrowsersFragment">
 
-
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/broserFragmentToolbar"
         android:layout_width="match_parent"
@@ -15,9 +14,7 @@
         android:background="@color/project_blue"
         app:menu="@menu/browsers_menu"
         app:title="@string/top_toolbar_title"
-        app:titleTextColor="@color/white">
-
-    </com.google.android.material.appbar.MaterialToolbar>
+        app:titleTextColor="@color/white"/>
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup"

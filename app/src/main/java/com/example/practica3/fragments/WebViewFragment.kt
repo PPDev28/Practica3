@@ -7,17 +7,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.practica3.R
+import com.example.practica3.constants.BROWSER_COMPANY
+import com.example.practica3.constants.BROWSER_NAME
+import com.example.practica3.constants.BROWSER_URL
 import com.example.practica3.databinding.FragmentWebViewBinding
 
 
-class WebViewFragment : Fragment(R.layout.fragment_web_view) {
+class WebViewFragment : Fragment() {
 
-    private var _binding: FragmentWebViewBinding? = null
-    private val binding get() = _binding
+    private var binding: FragmentWebViewBinding? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentWebViewBinding.inflate(inflater, container, false)
+        binding = FragmentWebViewBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
@@ -29,26 +32,26 @@ class WebViewFragment : Fragment(R.layout.fragment_web_view) {
     }
 
     override fun onDestroyView() {
+        binding = null
         super.onDestroyView()
-        _binding = null
     }
 
     private fun setUpToolbarIcon() {
         binding?.webViewToolbar?.setNavigationIcon(R.drawable.baseline_arrow_back_24)
         binding?.webViewToolbar?.setNavigationOnClickListener {
 
-            findNavController().navigate(R.id.action_webViewFragment_to_browsersFragment)
+            findNavController().navigate(R.id.action_web_view_fragment_to_browsers_fragment)
         }
 
-        val titleName = arguments?.getString("browserName")
-        val titleCompany = arguments?.getString("browserCompany")
+        val titleName = arguments?.getString(BROWSER_NAME)
+        val titleCompany = arguments?.getString(BROWSER_COMPANY)
         val tittle = StringBuilder().append(titleCompany).append(" $titleName").toString()
         binding?.webViewToolbar?.title = tittle
     }
 
     private fun setOptionsWebView() {
 
-        arguments?.getString("browserUrl")?.let { binding?.webView?.loadUrl(it) }
+        arguments?.getString(BROWSER_URL)?.let { binding?.webView?.loadUrl(it) }
 
         binding?.webView?.settings?.setSupportZoom(true)
         binding?.webView?.settings?.builtInZoomControls = true

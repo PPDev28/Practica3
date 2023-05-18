@@ -24,11 +24,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BrowsersFragment : Fragment(R.layout.fragment_browser),
+class BrowsersFragment : Fragment(),
     BrowserFragmentListAdapter.IOnItemClickListener {
 
-    private var _binding: FragmentBrowserBinding? = null
-    private val binding get() = _binding
+    private var binding: FragmentBrowserBinding? = null
     private val browserAdapter by lazy { BrowserFragmentListAdapter(this) }
     private var savedStateCheckBoxes = mutableSetOf<BrowserOSEnum>()
     private var webBrowserList: MutableList<WebBrowserBo> = mutableListOf()
@@ -36,7 +35,7 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentBrowserBinding.inflate(inflater, container, false)
+        binding = FragmentBrowserBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
@@ -49,8 +48,8 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     }
 
     override fun onDestroyView() {
+        binding = null
         super.onDestroyView()
-        _binding = null
     }
 
     private fun setupMenuFilters() {
@@ -74,15 +73,8 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 checkedItems[which] = isChecked
             }
             .setPositiveButton(R.string.menu_accept) { _, _ ->
-                val selectedFilters = mutableSetOf<BrowserOSEnum>()
 
-                for (i in browsersSuitableOS.indices) {
-                    if (checkedItems[i]) {
-                        selectedFilters.add(BrowserOSEnum.valueOf(browsersSuitableOS[i]))
-                    }
-                }
-
-                savedStateCheckBoxes.addAll(selectedFilters)
+                dialogCheckedItemsValue(browsersSuitableOS, checkedItems)
                 addNewChipToChipGroup(savedStateCheckBoxes)
                 applyChipFilters(savedStateCheckBoxes)
             }
@@ -90,10 +82,25 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
             .show()
     }
 
-    private fun addNewChipToChipGroup(savedState: MutableSet<BrowserOSEnum>) {
+    private fun dialogCheckedItemsValue(
+        browsersSuitableOS: Array<String>,
+        checkedItems: BooleanArray
+    ) {
+        val selectedFilters = mutableSetOf<BrowserOSEnum>()
+
+        for (i in browsersSuitableOS.indices) {
+            if (checkedItems[i]) {
+                selectedFilters.add(BrowserOSEnum.valueOf(browsersSuitableOS[i]))
+            }
+        }
+
+        savedStateCheckBoxes.addAll(selectedFilters)
+    }
+
+    private fun addNewChipToChipGroup(savedStateCheckBoxes: MutableSet<BrowserOSEnum>) {
         binding?.chipGroup?.removeAllViews()
 
-        savedState.forEach {
+        savedStateCheckBoxes.forEach {
             val newChip = Chip(context)
             newChip.text = it.name
             newChip.isCloseIconVisible = true
@@ -105,18 +112,18 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
                 binding?.chipGroup?.removeView(newChip)
                 val browserOS = BrowserOSEnum.valueOf(newChip.tag.toString())
 
-                savedState.remove(browserOS)
-                applyChipFilters(savedState)
+                savedStateCheckBoxes.remove(browserOS)
+                applyChipFilters(savedStateCheckBoxes)
             }
         }
     }
 
-    private fun applyChipFilters(savedState: MutableSet<BrowserOSEnum>) {
+    private fun applyChipFilters(savedStateCheckBoxes: MutableSet<BrowserOSEnum>) {
 
-        if (savedState.isNotEmpty()) {
+        if (savedStateCheckBoxes.isNotEmpty()) {
 
             val filteredList = webBrowserList.filter { browserOS ->
-                savedState.all {
+                savedStateCheckBoxes.all {
                     browserOS.compatibleOS.contains(it)
                 }
             }
@@ -139,13 +146,13 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
         }
         dialogBuilder?.setPositiveButton(R.string.menu_accept) { _, _ ->
             when (selectedRadioButton) {
-                0 -> {
+                SORT_BY_NAME -> {
                     browserAdapter.submitList(browserAdapter.currentList.sortedBy { it.browserName })
                 }
-                1 -> {
+                SORT_BY_COMPANY -> {
                     browserAdapter.submitList(browserAdapter.currentList.sortedBy { it.browserCompany })
                 }
-                2 -> {
+                SORT_BY_CREATION_DATE -> {
                     browserAdapter.submitList(browserAdapter.currentList.sortedBy { it.browserCreationDate })
                 }
             }
@@ -189,16 +196,16 @@ class BrowsersFragment : Fragment(R.layout.fragment_browser),
     }
 
     override fun onIconWebClickItem(position: Int, webBrowserBo: WebBrowserBo) {
+
         val bundleGetData = Bundle()
-        bundleGetData.putString("browserName", webBrowserBo.browserName)
-        bundleGetData.putString("browserCompany", webBrowserBo.browserCompany)
-        bundleGetData.putString("browserUrl", webBrowserBo.browserWeb)
+        bundleGetData.putString(BROWSER_NAME, webBrowserBo.browserName)
+        bundleGetData.putString(BROWSER_COMPANY, webBrowserBo.browserCompany)
+        bundleGetData.putString(BROWSER_URL, webBrowserBo.browserWeb)
 
         findNavController().navigate(
-            R.id.action_browsersFragment_to_webViewFragment,
+            R.id.action_browsers_fragment_to_web_view_fragment,
             bundleGetData
         )
     }
-
 }
 

@@ -1,22 +1,21 @@
 package com.example.practica3.activities
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import com.example.practica3.databinding.NavigationMainBinding
 
 class NavigationActivity : AppCompatActivity() {
 
-    private var _binding: NavigationMainBinding? = null
-    private val binding get() = _binding
+    private var binding: NavigationMainBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = NavigationMainBinding.inflate(layoutInflater)
+        binding = NavigationMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
     }
 
     override fun onDestroy() {
+        binding = null
         super.onDestroy()
-        _binding = null
     }
 }
