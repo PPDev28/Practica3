@@ -6,9 +6,16 @@ import com.example.practica3.databinding.NavigationMainBinding
 
 class NavigationActivity : AppCompatActivity() {
 
-    private val binding by lazy { NavigationMainBinding.inflate(layoutInflater) }
+    private var binding: NavigationMainBinding? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        binding = NavigationMainBinding.inflate(layoutInflater)
+        setContentView(binding?.root)
+    }
+
+    override fun onDestroy() {
+        binding = null
+        super.onDestroy()
     }
 }

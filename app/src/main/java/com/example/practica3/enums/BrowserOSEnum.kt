@@ -5,6 +5,5 @@ enum class BrowserOSEnum {
     MacOs,
     Linux,
     Android,
-    IOS,
-    ChromeOS
+    iOS
 }

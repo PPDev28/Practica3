@@ -7,12 +7,10 @@
     android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
+        style="@style/CardView.CustomDark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        app:cardCornerRadius="20dp"
-        app:strokeColor="@color/project_blue"
-        app:strokeWidth="4dp">
+        android:layout_margin="20dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -27,8 +25,8 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/browsersImgLogo"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_margin="20dp"
                 android:src="@drawable/logo_alten"
                 app:layout_constraintBottom_toBottomOf="parent"
