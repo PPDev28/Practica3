@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 
 interface WebBrowserService {
-    @GET("/v3/de5d7a8b-dc42-4f80-9d6d-e0d81a0e73ff/")
+    @GET("/v1/88d94dc0-a5cc-41ec-8618-80eae67a9472")
     fun getWebBrowsers(): Call<List<WebBrowserDto>>
 }

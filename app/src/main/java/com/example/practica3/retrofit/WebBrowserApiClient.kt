@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object WebBrowserApiClient {
-    private const val BASE_URL = "https://run.mocky.io/v3/de5d7a8b-dc42-4f80-9d6d-e0d81a0e73ff/"
+    private const val BASE_URL = "https://mocki.io/"
     private var webBrowserService: WebBrowserService? = null
 
     fun getWebBrowserService(): WebBrowserService? {
